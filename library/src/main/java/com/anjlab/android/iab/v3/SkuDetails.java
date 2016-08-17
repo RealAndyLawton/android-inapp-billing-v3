@@ -121,4 +121,36 @@ public class SkuDetails implements Parcelable {
 			return new SkuDetails[size];
 		}
 	};
+
+	public String getProductId() {
+		return productId;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public boolean isSubscription() {
+		return isSubscription;
+	}
+
+	public String getCurrency() {
+		return currency;
+	}
+
+	public Double getPriceValue() {
+		return priceValue;
+	}
+
+	public long getPriceLong() {
+		return priceLong;
+	}
+
+	public String getPriceText() {
+		return priceText;
+	}
 }
