@@ -94,22 +94,27 @@ public class BillingProcessor extends BillingBase {
 		}
 	};
 
+	public BillingProcessor(Context context, String licenseKey) {
+		super(context);
+		signatureBase64 = licenseKey;
+		contextPackageName = context.getApplicationContext().getPackageName();
+		cachedProducts = new BillingCache(context, MANAGED_PRODUCTS_CACHE_KEY);
+		cachedSubscriptions = new BillingCache(context, SUBSCRIPTIONS_CACHE_KEY);
+	}
+
 	public BillingProcessor(Context context, String licenseKey, IBillingHandler handler) {
 		this(context, licenseKey, null, handler);
 	}
 
 	public BillingProcessor(Context context, String licenseKey, String merchantId, IBillingHandler handler) {
-		super(context);
-		signatureBase64 = licenseKey;
+		this(context, licenseKey);
 		eventHandler = handler;
-		contextPackageName = context.getApplicationContext().getPackageName();
-		cachedProducts = new BillingCache(context, MANAGED_PRODUCTS_CACHE_KEY);
-		cachedSubscriptions = new BillingCache(context, SUBSCRIPTIONS_CACHE_KEY);
 		developerMerchantId = merchantId;
 		bindPlayServices();
+
 	}
 
-	private void bindPlayServices() {
+	public void bindPlayServices() {
 		try {
 			Intent iapIntent = new Intent("com.android.vending.billing.InAppBillingService.BIND");
 			iapIntent.setPackage("com.android.vending");
@@ -527,5 +532,9 @@ public class BillingProcessor extends BillingBase {
 		final Intent intent = new Intent("com.android.vending.billing.InAppBillingService.BIND");
 		List<ResolveInfo> list = packageManager.queryIntentServices(intent, 0);
 		return list.size() > 0;
+	}
+
+	public void setEventHandler(IBillingHandler eventHandler) {
+		this.eventHandler = eventHandler;
 	}
 }
