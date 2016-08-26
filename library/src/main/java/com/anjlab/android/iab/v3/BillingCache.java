@@ -124,4 +124,9 @@ public class BillingCache extends BillingBase {
 	public String toString() {
 		return TextUtils.join(", ", data.keySet());
 	}
+
+	@Override
+	public void release() {
+		
+	}
 }

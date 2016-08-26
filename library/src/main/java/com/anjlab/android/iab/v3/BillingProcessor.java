@@ -34,6 +34,7 @@ import com.android.vending.billing.IInAppBillingService;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -74,6 +75,7 @@ public class BillingProcessor extends BillingBase {
 	private IBillingHandler eventHandler;
 	private String developerMerchantId;
 	private boolean isSubsUpdateSupported;
+	private WeakReference<Context> mBoundContext;
 
 	private ServiceConnection serviceConnection = new ServiceConnection() {
 		@Override
@@ -96,6 +98,7 @@ public class BillingProcessor extends BillingBase {
 
 	public BillingProcessor(Context context, String licenseKey) {
 		super(context);
+		mBoundContext = new WeakReference<Context>(context);
 		signatureBase64 = licenseKey;
 		contextPackageName = context.getApplicationContext().getPackageName();
 		cachedProducts = new BillingCache(context, MANAGED_PRODUCTS_CACHE_KEY);
@@ -104,10 +107,12 @@ public class BillingProcessor extends BillingBase {
 
 	public BillingProcessor(Context context, String licenseKey, IBillingHandler handler) {
 		this(context, licenseKey, null, handler);
+		mBoundContext = new WeakReference<Context>(context);
 	}
 
 	public BillingProcessor(Context context, String licenseKey, String merchantId, IBillingHandler handler) {
 		this(context, licenseKey);
+		mBoundContext = new WeakReference<Context>(context);
 		eventHandler = handler;
 		developerMerchantId = merchantId;
 		bindPlayServices();
@@ -118,7 +123,7 @@ public class BillingProcessor extends BillingBase {
 		try {
 			Intent iapIntent = new Intent("com.android.vending.billing.InAppBillingService.BIND");
 			iapIntent.setPackage("com.android.vending");
-			getContext().bindService(iapIntent, serviceConnection, Context.BIND_AUTO_CREATE);
+			mBoundContext.get().bindService(iapIntent, serviceConnection, Context.BIND_AUTO_CREATE);
 		} catch (Exception e) {
 			Log.e(LOG_TAG, "error in bindPlayServices", e);
 		}
@@ -126,16 +131,15 @@ public class BillingProcessor extends BillingBase {
 
 	@Override
 	public void release() {
-		if (serviceConnection != null && getContext() != null) {
+		final Context boundContext = mBoundContext.get();
+		if (serviceConnection != null && boundContext != null) {
 			try {
-				getContext().unbindService(serviceConnection);
+				boundContext.unbindService(serviceConnection);
 			} catch (Exception e) {
 				Log.e(LOG_TAG, "Error in release", e);
 			}
 			billingService = null;
 		}
-		cachedProducts.release();
-		super.release();
 	}
 
 	public boolean isInitialized() {

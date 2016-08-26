@@ -21,32 +21,25 @@ import android.preference.PreferenceManager;
 
 import java.lang.ref.WeakReference;
 
-class BillingBase {
+abstract class BillingBase {
 
-	private WeakReference<Context> contextReference;
+	private Context appContext;
 
 	public BillingBase(Context context) {
-		contextReference = new WeakReference<Context>(context);
-	}
-
-	public Context getContext() {
-		return contextReference.get();
+		appContext = context.getApplicationContext();
 	}
 
 	protected String getPreferencesBaseKey() {
-		return contextReference.get().getPackageName() + "_preferences";
+		return appContext.getPackageName() + "_preferences";
 	}
 
 	private SharedPreferences getPreferences() {
-		if (contextReference.get() != null)
-			return PreferenceManager.getDefaultSharedPreferences(contextReference.get());
+		if (appContext != null)
+			return PreferenceManager.getDefaultSharedPreferences(appContext);
 		return null;
 	}
 
-	public void release() {
-		if (contextReference != null)
-			contextReference.clear();
-	}
+	public abstract void release();
 
 	protected boolean saveString(String key, String value) {
 		SharedPreferences sp = getPreferences();
