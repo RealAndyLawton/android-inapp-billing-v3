@@ -646,4 +646,8 @@ public class BillingProcessor extends BillingBase {
             eventHandler.onBillingError(errorCode, error);
         }
     }
+
+    public void setEventHandler(IBillingHandler eventHandler) {
+        this.eventHandler = eventHandler;
+    }
 }
