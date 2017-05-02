@@ -35,7 +35,7 @@ public class BillingCache extends BillingBase {
 
 	public BillingCache(Context context, String key) {
 		super(context);
-		data = new HashMap<String, PurchaseInfo>();
+		data = new HashMap<>();
 		cacheKey = key;
 		load();
 	}
@@ -127,6 +127,6 @@ public class BillingCache extends BillingBase {
 
 	@Override
 	public void release() {
-		
+
 	}
 }
