@@ -3,92 +3,91 @@ apply plugin: 'maven'
 apply plugin: 'signing'
 
 group 'com.anjlab.android.iab.v3'
-version '1.0.32'
+version '1.0.39'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion '23.0.2'
+  compileSdkVersion 23
+  buildToolsVersion '25.0.2'
 
-    defaultConfig {
-        versionCode 1
-        versionName project.version
-        minSdkVersion 8
-        targetSdkVersion 23
+  defaultConfig {
+    versionCode 1
+    versionName project.version
+    minSdkVersion 8
+    targetSdkVersion 23
+    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+  }
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+  testOptions.unitTests {
+    // Don't throw runtime exceptions for android calls that are not mocked
+    returnDefaultValues = true
+
+    // Always show the result of every unit test, even if it passes.
+    all {
+      testLogging {
+        events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
+      }
     }
-
-    testOptions.unitTests {
-        // Don't throw runtime exceptions for android calls that are not mocked
-        returnDefaultValues = true
-
-        // Always show the result of every unit test, even if it passes.
-        all {
-            testLogging {
-                events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
-            }
-        }
-    }
+  }
 }
 
 dependencies {
-    // Dependencies for local unit tests
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.mockito:mockito-all:1.10.19'
-    testCompile 'org.hamcrest:hamcrest-all:1.3'
-    // Android Testing Support Library's runner and rules
-    androidTestCompile 'com.android.support.test:runner:0.4'
-    androidTestCompile 'com.android.support.test:rules:0.4'
-    // Espresso UI Testing
-    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
+  // Dependencies for local unit tests
+  testCompile 'junit:junit:4.12'
+  testCompile 'org.mockito:mockito-all:1.10.19'
+  testCompile 'org.hamcrest:hamcrest-all:1.3'
+  // Android Testing Support Library's runner and rules
+  androidTestCompile 'com.android.support.test:runner:0.4'
+  androidTestCompile 'com.android.support.test:rules:0.4'
+  // Espresso UI Testing
+  androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
 
-    // UIAutomator Testing.
-    androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.1'
+  // UIAutomator Testing.
+  androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.1'
 }
 
 configurations.archives.extendsFrom configurations.default
 
 signing {
-    required { has("release") && gradle.taskGraph.hasTask("uploadArchives") }
-    sign configurations.archives
+  required { has("release") && gradle.taskGraph.hasTask("uploadArchives") }
+  sign configurations.archives
 }
 
 task androidJavadocs(type: Javadoc) {
-    source = 'src/main/java,src/main/aidl'
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+  source = 'src/main/java,src/main/aidl'
+  classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
 }
 
 task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
-    classifier = 'javadoc'
-    from androidJavadocs.destinationDir
+  classifier = 'javadoc'
+  from androidJavadocs.destinationDir
 }
 
 task androidSourcesJar(type: Jar) {
-    classifier = 'sources'
-    from 'src/main/java'
+  classifier = 'sources'
+  from 'src/main/java'
 }
 
 artifacts {
-    archives androidSourcesJar
-    archives androidJavadocsJar
+  archives androidSourcesJar
+  archives androidJavadocsJar
 }
 
 android.libraryVariants.all { variant ->
-    def name = variant.buildType.name
-    if (name.equals('com.android.builder.BuilderConstants.DEBUG')) {
-        return; // Skip debug builds.
+  def name = variant.buildType.name
+  if (name.equals('com.android.builder.BuilderConstants.DEBUG')) {
+    return; // Skip debug builds.
+  }
+  def task = project.tasks.create "jar${name.capitalize()}", Jar
+  task.dependsOn variant.javaCompile
+  task.from variant.javaCompile.destinationDir
+  task.baseName 'anjlab-iabv3'
+  task.doLast {
+    println "Copying jar to sample project..."
+    copy {
+      from task.archivePath
+      into '../sample/libs'
+      rename { String fileName -> 'anjlab-iabv3-current.jar' }
     }
-    def task = project.tasks.create "jar${name.capitalize()}", Jar
-    task.dependsOn variant.javaCompile
-    task.from variant.javaCompile.destinationDir
-    task.baseName 'anjlab-iabv3'
-    task.doLast{
-        println "Copying jar to sample project..."
-        copy {
-            from task.archivePath
-            into '../sample/libs'
-            rename { String fileName -> 'anjlab-iabv3-current.jar' }
-        }
-    }
-    artifacts.add('archives', task);
+  }
+  artifacts.add('archives', task);
 }
