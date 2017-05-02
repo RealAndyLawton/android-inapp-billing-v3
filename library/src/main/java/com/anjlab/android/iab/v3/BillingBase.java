@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -23,58 +23,55 @@ import java.lang.ref.WeakReference;
 
 abstract class BillingBase {
 
-	private Context appContext;
+    private Context appContext;
 
-	public BillingBase(Context context) {
-		appContext = context.getApplicationContext();
-	}
+    public BillingBase(Context context) {
+        appContext = context.getApplicationContext();
+    }
 
-	protected String getPreferencesBaseKey() {
-		return appContext.getPackageName() + "_preferences";
-	}
+    protected String getPreferencesBaseKey() {
+        return appContext.getPackageName() + "_preferences";
+    }
 
-	private SharedPreferences getPreferences() {
-		if (appContext != null)
-			return PreferenceManager.getDefaultSharedPreferences(appContext);
-		return null;
-	}
+    private SharedPreferences getPreferences() {
+        if (appContext != null) return PreferenceManager.getDefaultSharedPreferences(appContext);
+        return null;
+    }
 
-	public abstract void release();
+    public abstract void release();
 
-	protected boolean saveString(String key, String value) {
-		SharedPreferences sp = getPreferences();
-		if (sp != null) {
-			SharedPreferences.Editor spe = sp.edit();
-			spe.putString(key, value);
-			spe.commit();
-			return true;
-		}
-		return false;
-	}
+    protected boolean saveString(String key, String value) {
+        SharedPreferences sp = getPreferences();
+        if (sp != null) {
+            SharedPreferences.Editor spe = sp.edit();
+            spe.putString(key, value);
+            spe.commit();
+            return true;
+        }
+        return false;
+    }
 
-	protected String loadString(String key, String defValue) {
-		SharedPreferences sp = getPreferences();
-		if (sp != null)
-			return sp.getString(key, defValue);
-		return defValue;
-	}
+    protected String loadString(String key, String defValue) {
+        SharedPreferences sp = getPreferences();
+        if (sp != null) return sp.getString(key, defValue);
+        return defValue;
+    }
 
-	protected boolean saveBoolean(String key, Boolean value) {
-		SharedPreferences sp = getPreferences();
-		if (sp != null) {
-			SharedPreferences.Editor spe = sp.edit();
-			spe.putBoolean(key, value);
-			spe.commit();
-			return true;
-		}
-		return false;
-	}
+    protected boolean saveBoolean(String key, Boolean value) {
+        SharedPreferences sp = getPreferences();
+        if (sp != null) {
+            SharedPreferences.Editor spe = sp.edit();
+            spe.putBoolean(key, value);
+            spe.commit();
+            return true;
+        }
+        return false;
+    }
 
-	protected boolean loadBoolean(String key, boolean defValue) {
-		SharedPreferences sp = getPreferences();
-		if (sp != null)
-			return sp.getBoolean(key, defValue);
-		return defValue;
-	}
+    protected boolean loadBoolean(String key, boolean defValue) {
+        SharedPreferences sp = getPreferences();
+        if (sp != null) return sp.getBoolean(key, defValue);
+        return defValue;
+    }
 }
 

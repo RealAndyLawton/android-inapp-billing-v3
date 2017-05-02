@@ -7,15 +7,12 @@ import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
 
-public class SkuDetailsParcelableTest
-{
+public class SkuDetailsParcelableTest {
     @Test
-    public void testParcelable() throws Exception
-    {
-        String skuDetailsJson =
-                "{\"productId\": \"test-id\",\"type\": \"inapp\",\"price\": \"€7.99\","+
-                "\"price_amount_micros\": \"7990000\",\"price_currency_code\": \"GBP\","+
-                "\"title\": \"Test Product\",\"description\": \"A great product for testing.\"}";
+    public void testParcelable() throws Exception {
+        String skuDetailsJson = "{\"productId\": \"test-id\",\"type\": \"inapp\",\"price\": \"€7.99\","
+            + "\"price_amount_micros\": \"7990000\",\"price_currency_code\": \"GBP\","
+            + "\"title\": \"Test Product\",\"description\": \"A great product for testing.\"}";
         JSONObject details = new JSONObject(skuDetailsJson);
         SkuDetails skuDetails = new SkuDetails(details);
 

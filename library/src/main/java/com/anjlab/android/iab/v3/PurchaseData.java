@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,8 +20,7 @@ import android.os.Parcelable;
 
 import java.util.Date;
 
-public class PurchaseData implements Parcelable
-{
+public class PurchaseData implements Parcelable {
     public String orderId;
     public String packageName;
     public String productId;
@@ -32,14 +31,12 @@ public class PurchaseData implements Parcelable
     public boolean autoRenewing;
 
     @Override
-    public int describeContents()
-    {
+    public int describeContents() {
         return 0;
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags)
-    {
+    public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.orderId);
         dest.writeString(this.packageName);
         dest.writeString(this.productId);
@@ -50,36 +47,29 @@ public class PurchaseData implements Parcelable
         dest.writeByte(autoRenewing ? (byte) 1 : (byte) 0);
     }
 
-    public PurchaseData()
-    {
+    public PurchaseData() {
     }
 
-    protected PurchaseData(Parcel in)
-    {
+    protected PurchaseData(Parcel in) {
         this.orderId = in.readString();
         this.packageName = in.readString();
         this.productId = in.readString();
         long tmpPurchaseTime = in.readLong();
         this.purchaseTime = tmpPurchaseTime == -1 ? null : new Date(tmpPurchaseTime);
         int tmpPurchaseState = in.readInt();
-        this.purchaseState =
-                tmpPurchaseState == -1 ? null : PurchaseState.values()[tmpPurchaseState];
+        this.purchaseState = tmpPurchaseState == -1 ? null : PurchaseState.values()[tmpPurchaseState];
         this.developerPayload = in.readString();
         this.purchaseToken = in.readString();
         this.autoRenewing = in.readByte() != 0;
     }
 
-    public static final Parcelable.Creator<PurchaseData> CREATOR =
-            new Parcelable.Creator<PurchaseData>()
-            {
-                public PurchaseData createFromParcel(Parcel source)
-                {
-                    return new PurchaseData(source);
-                }
+    public static final Parcelable.Creator<PurchaseData> CREATOR = new Parcelable.Creator<PurchaseData>() {
+        public PurchaseData createFromParcel(Parcel source) {
+            return new PurchaseData(source);
+        }
 
-                public PurchaseData[] newArray(int size)
-                {
-                    return new PurchaseData[size];
-                }
-            };
+        public PurchaseData[] newArray(int size) {
+            return new PurchaseData[size];
+        }
+    };
 }

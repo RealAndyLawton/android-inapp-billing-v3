@@ -154,7 +154,8 @@ public class BillingProcessor extends BillingBase {
         super(context);
         mBoundContext = new WeakReference<Context>(context);
         signatureBase64 = licenseKey;
-        contextPackageName = context.getApplicationContext().getPackageName();
+        contextPackageName = context.getApplicationContext()
+            .getPackageName();
         cachedProducts = new BillingCache(context, MANAGED_PRODUCTS_CACHE_KEY);
         cachedSubscriptions = new BillingCache(context, SUBSCRIPTIONS_CACHE_KEY);
     }
@@ -175,7 +176,8 @@ public class BillingProcessor extends BillingBase {
 
     private void bindPlayServices() {
         try {
-            mBoundContext.get().bindService(getBindServiceIntent(), serviceConnection, Context.BIND_AUTO_CREATE);
+            mBoundContext.get()
+                .bindService(getBindServiceIntent(), serviceConnection, Context.BIND_AUTO_CREATE);
         } catch (Exception e) {
             Log.e(LOG_TAG, "error in bindPlayServices", e);
             reportBillingError(Constants.BILLING_ERROR_BIND_PLAY_STORE_FAILED, e);
@@ -307,9 +309,9 @@ public class BillingProcessor extends BillingBase {
     /**
      * Change subscription i.e. upgrade or downgrade
      *
-     * @param activity     the activity calling this method
+     * @param activity the activity calling this method
      * @param oldProductId passing null or empty string will act the same as {@link #subscribe(Activity, String)}
-     * @param productId    the new subscription id
+     * @param productId the new subscription id
      * @return {@code false} if {@code oldProductId} is not {@code null} AND change subscription
      * is not supported.
      */
@@ -325,9 +327,9 @@ public class BillingProcessor extends BillingBase {
     /**
      * Change subscription i.e. upgrade or downgrade
      *
-     * @param activity      the activity calling this method
+     * @param activity the activity calling this method
      * @param oldProductIds passing null will act the same as {@link #subscribe(Activity, String)}
-     * @param productId     the new subscription id
+     * @param productId the new subscription id
      * @return {@code false} if {@code oldProductIds} is not {@code null} AND change subscription
      * is not supported.
      */

@@ -7,16 +7,13 @@ import org.junit.Test;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 
-public class TransactionDetailsParcelableTest
-{
+public class TransactionDetailsParcelableTest {
     @Test
-    public void testParcelable() throws Exception
-    {
-        String purchaseInfoJson =
-                "{\"orderId\": \"GPA.1234-5678-9012-34567\",\"packageName\": \"com.example.app\"," +
-                "\"productId\": \"exampleSku\",\"purchaseTime\": 1345678900000,\"purchaseState\": 0," +
-                "\"developerPayload\": \"bGoa+V7g/yqDXvKRqq+JTFn4uQZbPiQJo4pf9RzJ\"," +
-                "\"purchaseToken\": \"opaque-token-up-to-1000-characters\"}";
+    public void testParcelable() throws Exception {
+        String purchaseInfoJson = "{\"orderId\": \"GPA.1234-5678-9012-34567\",\"packageName\": \"com.example.app\","
+            + "\"productId\": \"exampleSku\",\"purchaseTime\": 1345678900000,\"purchaseState\": 0,"
+            + "\"developerPayload\": \"bGoa+V7g/yqDXvKRqq+JTFn4uQZbPiQJo4pf9RzJ\","
+            + "\"purchaseToken\": \"opaque-token-up-to-1000-characters\"}";
 
         PurchaseInfo purchaseInfo = new PurchaseInfo(purchaseInfoJson, "signature");
 
